@@ -1,6 +1,7 @@
 <template>
     <div class="vjui-docs-head">
         <div class="vjui-content-head">
+            <span class="vjui-menu-icon" @click="expandFlodAside"></span>
             <p class="vjui-docs-title">VJUI</p>
             <div class="vjui-link-header">
                 <a v-for="item of headLinkInfo" :key="item.text" 
@@ -10,6 +11,8 @@
                 </a>
                 <a class="vjui-link-unit hover" target="blank" href="https://github.com/Jayantxu/vJUI.git">GitHub仓库</a>
             </div>
+            <span class="vjui-github-icon" @click="openGitHubLink">
+            </span>
         </div>
     </div>
 </template>
@@ -20,11 +23,13 @@ import {
     // useSiteData,
     useRoute
 } from "vitepress";
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 export default {
     setup() {
         const route = useRoute();
         const siteRouteData = useSiteDataByRoute();
+        const winScreenW = inject('winScreenW');
+        const willShowAsideMenu = inject('willShowAsideMenu');
 
         const nowActiveNav = computed(() => {
             let reg = /^\/[\w]+/g;
@@ -37,7 +42,17 @@ export default {
 
         return {
             headLinkInfo,
-            nowActiveNav
+            nowActiveNav,
+            winScreenW,
+            willShowAsideMenu
+        }
+    },
+    methods: {
+        expandFlodAside() {
+            this.willShowAsideMenu = !this.willShowAsideMenu;
+        },
+        openGitHubLink() {
+            window.open('https://github.com/Jayantxu/vJUI.git');
         }
     }
 };
@@ -76,5 +91,38 @@ export default {
 }
 .vjui-hover-nav {
     border-bottom: 2px solid #46bd87;
+}
+.vjui-github-icon, .vjui-menu-icon {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+    background-size: 100% 100%;
+}
+.vjui-github-icon {
+    background: url('/github.svg') no-repeat;
+}
+.vjui-menu-icon {
+    position: absolute;
+    left: 0;
+    background: url('/menu.svg') no-repeat;
+}
+@media screen and (max-width: 1120px) and (min-width: 721px){
+    .vjui-content-head {
+        width: 100%;
+        justify-content: space-around;
+    }
+}
+@media screen and (max-width: 720px){
+    .vjui-content-head {
+        width: 100%;
+        justify-content: center;
+    }
+    .vjui-link-header {
+        display: none;
+    }
+    .vjui-github-icon, .vjui-menu-icon {
+        display: block;
+        margin-left: 1rem;
+    }
 }
 </style>

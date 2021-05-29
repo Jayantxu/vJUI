@@ -1,13 +1,14 @@
 <template>
     <vjuiHead></vjuiHead>
     <div class="vjui-docs-content">
-        <vjuiMenu></vjuiMenu>
+        <vjuiMenu ></vjuiMenu>
         <div class="vjui-md-playground vjui-hideScrollBar">
             <Content />
         </div>
     </div>
 </template>
 <script>
+import { ref, onMounted, provide } from 'vue';
 import vjuiHead from './components/vJUIHead.vue';
 import vjuiMenu from './components/vjuiMenu.vue';
 export default {
@@ -15,6 +16,23 @@ export default {
         vjuiHead,
         vjuiMenu
     },
+    setup() {
+        let winScreenWidth = ref(0);
+        let asideMenuShow = ref(true);
+        onMounted(() => {
+            winScreenWidth.value = document.body.clientWidth;
+            window.onresize = () => {
+                setTimeout(() => {
+                    winScreenWidth.value = document.body.clientWidth;
+                }, 50);
+            };
+        })
+        provide('winScreenW', winScreenWidth);
+        provide('willShowAsideMenu', asideMenuShow);
+        return {
+            winScreenWidth
+        }
+    }
 };
 </script>
 <style>
@@ -25,5 +43,6 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-    <div class="vjui-aside-menu vjui-hideScrollBar">
+    <div class="vjui-aside-menu vjui-hideScrollBar" :style="willShowAsideMenu ? {} : {left: '-234px'}">
+        <vjui-aside-link></vjui-aside-link>
         <div class="vjui-nav-group" v-for="item of nowActiveMenuNav" :key="item.text"
             >
             <span class="vjui-nav-heading">{{ item.text }}</span>
@@ -15,11 +16,17 @@
 </template>
 <script>
 import { useRoute, useSiteDataByRoute } from 'vitepress';
-import { computed } from 'vue';
+import { computed, inject, watch } from 'vue';
+import vjuiAsideLink from './vjuiAsideLink.vue';
 export default {
+    components: {
+        vjuiAsideLink
+    },
     setup() {
         const route = useRoute();
         const siteRouteData = useSiteDataByRoute();
+        const winScreenW = inject('winScreenW');
+        const willShowAsideMenu = inject('willShowAsideMenu');
         
         const nowActiveNav = computed(() => {
             let reg = /^\/[\w]+/g;
@@ -28,8 +35,11 @@ export default {
         const nowActiveNavItem = computed(() => {
             let reg = /^\/[\w-/]+/g;
             return reg.exec(route.path)[0];
-        })
-
+        });
+        const LinkInfo = computed(() => {
+            const { nav } =  siteRouteData.value.themeConfig;
+            return nav;
+        });
         const nowActiveMenuNav = computed(() => {
             const { nav } = siteRouteData.value.themeConfig;
             for( let navItem of nav ) {
@@ -38,9 +48,19 @@ export default {
                 }
             }
         });
+        watch(
+            () => route.path,
+            () => {
+                willShowAsideMenu.value = !willShowAsideMenu.value;
+            }
+        )
         return {
             nowActiveMenuNav,
-            nowActiveNavItem
+            nowActiveNav,
+            nowActiveNavItem,
+            winScreenW,
+            willShowAsideMenu,
+            LinkInfo
         }
     }
 };
@@ -54,7 +74,9 @@ export default {
     border-right: 1px solid #e9e9e9;
     margin-right: 1rem;
     padding: 1rem 0;
+    transition: left 0.5s;
 }
+
 .vjui-nav-group {
     width: 100%;
     margin-bottom: 0.875rem;
@@ -87,5 +109,16 @@ export default {
 .vjui-nav-item:hover {
     color: #3eaf7c;
     cursor: pointer;
+}
+@media screen and (max-width: 720px){
+    .vjui-aside-menu {
+        position: absolute;
+        left: 0;
+        background: #fcfcfc;
+        padding: 0;
+    }
+    .vjui-nav-group {
+        padding-left: 1rem;
+    }
 }
 </style>
