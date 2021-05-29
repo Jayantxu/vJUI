@@ -1,0 +1,14 @@
+.vjui-docs-content {
+    width: 70rem;
+    height: calc(100% - 50px);
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.vjui-md-playground {
+    flex-grow: 1;
+    height: 100%;
+    overflow: auto;
+}

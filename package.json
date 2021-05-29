@@ -1,0 +1,15 @@
+{
+  "name": "jayant-vue-ui",
+  "version": "1",
+  "main": "index.js",
+  "author": "Jayant xu",
+  "license": "MIT",
+  "scripts": {
+    "docs-dev": "vitepress dev docs --port 4002",
+    "docs-build": "vitepress build docs",
+    "docs-serve": "vitepress serve docs"
+  },
+  "devDependencies": {
+    "vitepress": "^0.13.2"
+  }
+}
